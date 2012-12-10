@@ -1,0 +1,5 @@
+*.user
+*.pdb
+Thumbs.db
+debug/
+release/
