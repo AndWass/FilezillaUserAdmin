@@ -243,8 +243,12 @@ bool FilezillaAdminConnection::parseNormalData()
             }
             else if(type == 2)
             {
-                emit connFail("Login failed.");
-                mSocket->abort();
+                QString text = QString::fromUtf8(mDataRead.data()+6, len-1);
+                if(id == 1)
+                {
+                    mSocket->abort();
+                    emit connMessage(text);
+                }
             }
             else
             {
