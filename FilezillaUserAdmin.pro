@@ -18,13 +18,16 @@ SOURCES += main.cpp\
     filezillaadminconnection.cpp \
     md5.cpp \
     filezillaaccounts.cpp \
-    filezillausermodel.cpp
+    filezillausermodel.cpp \
+    editdirectoriesdialog.cpp
 
 HEADERS  += mainwindow.h \
     filezillaserverdesc.h \
     filezillaadminconnection.h \
     md5.h \
     filezillaaccounts.h \
-    filezillausermodel.h
+    filezillausermodel.h \
+    editdirectoriesdialog.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    editdirectoriesdialog.ui

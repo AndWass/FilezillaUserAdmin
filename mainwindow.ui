@@ -145,6 +145,9 @@
       <height>311</height>
      </rect>
     </property>
+    <property name="contextMenuPolicy">
+     <enum>Qt::CustomContextMenu</enum>
+    </property>
    </widget>
    <widget class="QWidget" name="verticalLayoutWidget_2">
     <property name="geometry">
@@ -311,6 +314,19 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionEdit_user_directories">
+   <property name="text">
+    <string>Edit directories...</string>
+   </property>
+  </action>
+  <action name="actionDelete_user">
+   <property name="text">
+    <string>Delete user</string>
+   </property>
+   <property name="toolTip">
+    <string>Delete the selected user</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>

@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "filezillaserverdesc.h"
 #include "filezillaaccounts.h"
+#include "editdirectoriesdialog.h"
 #include "md5.h"
 #include <QtNetwork/QTcpSocket>
 #include <string>
@@ -23,6 +24,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&conn, SIGNAL(connFail(QString)), this, SLOT(connectionFailed(QString)));
     connect(&conn, SIGNAL(connMessage(QString)), this, SLOT(connectionMessage(QString)));
     connect(&conn, SIGNAL(replyReceived(FilezillaReply)), this, SLOT(serverReply(FilezillaReply)));
+    usersContextMenu = new QMenu();
+    usersContextMenu->addAction(ui->actionEdit_user_directories);
+    usersContextMenu->addAction(ui->actionDelete_user);
 }
 
 MainWindow::~MainWindow()
@@ -120,6 +124,17 @@ FilezillaUser MainWindow::getUser(const QString company, const QString password)
     ret.password = pass;
 
     return ret;
+}
+
+FilezillaUser *MainWindow::getSelectedUser()
+{
+    QModelIndexList selected = ui->tvUsers->selectionModel()->selectedIndexes();
+    if(selected.size() == 0)
+    {
+        return NULL;
+    }
+
+    return &users[selected[0].row()];
 }
 
 void MainWindow::handleAccountReply(FilezillaReply &reply)
@@ -242,15 +257,7 @@ void MainWindow::on_btnGeneratePass_clicked()
 
 void MainWindow::on_btnDelete_clicked()
 {
-    QModelIndexList selected = ui->tvUsers->selectionModel()->selectedIndexes();
-    for(int i=0; i<selected.size(); i++)
-    {
-        userModel->removeAt(selected[i].row());
-    }
-
-    sendAccountSettings();
-
-    updateAccountSettings();
+    deleteSelectedUser();
 }
 
 void MainWindow::on_tvUsers_clicked(const QModelIndex &index)
@@ -284,5 +291,54 @@ void MainWindow::on_tvUsers_activated(const QModelIndex &index)
     else
     {
         ui->btnDelete->setEnabled(false);
+    }
+}
+
+void MainWindow::on_tvUsers_customContextMenuRequested(const QPoint &pos)
+{
+    QModelIndex index = ui->tvUsers->indexAt(pos);
+    if(index.isValid())
+    {
+        if(userModel->flags(index) & Qt::ItemIsSelectable)
+        {
+
+            QPoint global = ui->tvUsers->mapToGlobal(pos);
+            usersContextMenu->popup(global);
+        }
+    }
+}
+
+void MainWindow::on_actionDelete_user_triggered()
+{
+    deleteSelectedUser();
+}
+
+void MainWindow::deleteSelectedUser()
+{
+    QModelIndexList selected = ui->tvUsers->selectionModel()->selectedIndexes();
+    for(int i=0; i<selected.size(); i++)
+    {
+        userModel->removeAt(selected[i].row());
+    }
+
+    sendAccountSettings();
+
+    updateAccountSettings();
+}
+
+void MainWindow::on_actionEdit_user_directories_triggered()
+{
+    FilezillaUser *selected = getSelectedUser();
+    if(selected == NULL)
+    {
+        return;
+    }
+    EditDirectoriesDialog diag(selected->directories);
+    int res = diag.exec();
+    if(res == QDialog::Accepted)
+    {
+        selected->directories = diag.getDirectories();
+        sendAccountSettings();
+        updateAccountSettings();
     }
 }

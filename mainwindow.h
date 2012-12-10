@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QMenu>
 #include "filezillaadminconnection.h"
 #include "filezillaaccounts.h"
 #include "filezillausermodel.h"
@@ -39,10 +40,20 @@ private slots:
 
     void on_tvUsers_activated(const QModelIndex &index);
 
+    void on_tvUsers_customContextMenuRequested(const QPoint &pos);
+
+    void on_actionDelete_user_triggered();
+
+    void on_actionEdit_user_directories_triggered();
+
 private:
+    void deleteSelectedUser();
+    QMenu *usersContextMenu;
     std::vector<FilezillaUser> users;
     std::vector<FilezillaGroup> groups;
     FilezillaUser getUser(const QString company, const QString password);
+
+    FilezillaUser *getSelectedUser();
 
     void handleAccountReply(FilezillaReply &reply);
     void updateAccountSettings();
