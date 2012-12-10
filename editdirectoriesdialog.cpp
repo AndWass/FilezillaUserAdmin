@@ -18,7 +18,7 @@ EditDirectoriesDialog::EditDirectoriesDialog(const std::vector<FilezillaDirector
 
     ui->lvDirectories->setModel(dirModel);
 
-    connect(qApp, SIGNAL(focusChanged(QWidget*,QWidget*)), this, SLOT(on_focus_changed(QWidget*,QWidget*)));
+    connect(qApp, SIGNAL(focusChanged(QWidget*,QWidget*)), this, SLOT(focus_changed(QWidget*,QWidget*)));
 }
 
 EditDirectoriesDialog::~EditDirectoriesDialog()
@@ -162,7 +162,7 @@ void EditDirectoriesDialog::on_cbIsHome_clicked()
     }
 }
 
-void EditDirectoriesDialog::on_focus_changed(QWidget *from, QWidget *to)
+void EditDirectoriesDialog::focus_changed(QWidget *from, QWidget *to)
 {
     from; // Get rid of warning.
     if(to == ui->leDirectory)
