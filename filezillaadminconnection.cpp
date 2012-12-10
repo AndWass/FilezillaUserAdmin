@@ -275,10 +275,26 @@ void FilezillaAdminConnection::bytesToRead()
 
 }
 
+// TODO: implement
 void FilezillaAdminConnection::socketError(QAbstractSocket::SocketError error)
 {
-    // Get rid of warning
-    error;
+    switch(error)
+    {
+    case QAbstractSocket::ConnectionRefusedError:
+        emit connFail("Connection refused");
+        break;
+
+    case QAbstractSocket::NetworkError:
+        emit connFail("Network error");
+        break;
+
+    case QAbstractSocket::SocketTimeoutError:
+        emit connFail("Connection timeout");
+        break;
+
+    default:
+        break;
+    }
 }
 
 

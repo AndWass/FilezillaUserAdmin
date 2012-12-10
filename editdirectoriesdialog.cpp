@@ -6,8 +6,8 @@
 
 EditDirectoriesDialog::EditDirectoriesDialog(const std::vector<FilezillaDirectory> &dirs, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::EditDirectoriesDialog),
-    directories(dirs)
+    directories(dirs),
+    ui(new Ui::EditDirectoriesDialog)
 {
     ui->setupUi(this);
     dirModel = new QStandardItemModel();
@@ -164,7 +164,6 @@ void EditDirectoriesDialog::on_cbIsHome_clicked()
 
 void EditDirectoriesDialog::focus_changed(QWidget *from, QWidget *to)
 {
-    from; // Get rid of warning.
     if(to == ui->leDirectory)
     {
         ui->lvDirectories->clearSelection();

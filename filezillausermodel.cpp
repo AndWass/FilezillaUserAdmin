@@ -2,8 +2,8 @@
 #include <iostream>
 
 FilezillaUserModel::FilezillaUserModel(std::vector<FilezillaUser> *users, QObject *parent) :
-    pUsers(users),
-    QAbstractItemModel(parent)
+    QAbstractItemModel(parent),
+    pUsers(users)
 {
 }
 
@@ -24,7 +24,6 @@ int FilezillaUserModel::rowCount(const QModelIndex &parent) const
 
 int FilezillaUserModel::columnCount(const QModelIndex &parent) const
 {
-    parent; // Get rid of warning
     return 1;
 }
 
@@ -75,7 +74,6 @@ QVariant FilezillaUserModel::data(const QModelIndex &index, int role) const
 
 QVariant FilezillaUserModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    section; // Get rid of warning
     if(orientation == Qt::Horizontal && role == Qt::DisplayRole)
     {
         return QVariant("Users");
@@ -118,7 +116,7 @@ void FilezillaUserModel::clear()
 void FilezillaUserModel::removeAt(int index)
 {
     beginRemoveRows(QModelIndex(), index, index);
-    std::vector<FilezillaUser>::const_iterator iter = pUsers->begin();
+    std::vector<FilezillaUser>::iterator iter = pUsers->begin();
     for(int i=0; i<index; i++)
     {
         iter++;
