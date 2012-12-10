@@ -3,3 +3,6 @@
 Thumbs.db
 debug/
 release/
+Makefile
+Makefile.*
+ui_*

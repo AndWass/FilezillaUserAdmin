@@ -31,3 +31,5 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui \
     editdirectoriesdialog.ui
+
+win32:DEFINES += _CRT_SECURE_NO_WARNINGS

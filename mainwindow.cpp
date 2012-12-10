@@ -162,7 +162,7 @@ void MainWindow::handleAccountReply(FilezillaReply &reply)
     {
         FilezillaAccountPacket packet(reply.data);
         unsigned int num = packet.getNextInt16();
-        for(int i=0; i<num; i++)
+        for(unsigned int i=0; i<num; i++)
         {
             FilezillaGroup grp;
             grp.Parse(packet);
@@ -190,13 +190,13 @@ void MainWindow::sendAccountSettings()
 {
     FilezillaAccountPacket packet;
     packet.addInt16(groups.size());
-    for(int i=0; i<groups.size(); i++)
+    for(unsigned int i=0; i<groups.size(); i++)
     {
         groups[i].FillPacket(packet);
     }
 
     packet.addInt16(users.size());
-    for(int i=0; i<users.size(); i++)
+    for(unsigned int i=0; i<users.size(); i++)
     {
         users[i].FillPacket(packet);
     }
@@ -208,7 +208,7 @@ void MainWindow::on_btnAddUser_clicked()
 {
     FilezillaUser user = getUser(ui->leUsername->text(), ui->lePassword->text());
     bool found = false;
-    int i;
+    unsigned int i;
     for(i=0; i<users.size(); i++)
     {
         // If user exists update with new info rather than

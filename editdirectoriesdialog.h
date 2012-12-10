@@ -37,6 +37,10 @@ private slots:
 
     void on_btnAdd_clicked();
 
+    void on_cbIsHome_clicked();
+
+    void on_focus_changed(QWidget *from, QWidget *to);
+
 private:
     Ui::EditDirectoriesDialog *ui;
 };

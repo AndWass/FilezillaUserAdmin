@@ -134,19 +134,19 @@ void FilezillaGroup::FillPacket(FilezillaAccountPacket &packet)
     packet.addInt8(options);
 
     packet.addInt16(disallowedIps.size());
-    for(int i=0; i<disallowedIps.size(); i++)
+    for(unsigned int i=0; i<disallowedIps.size(); i++)
     {
         packet.addString(disallowedIps[i]);
     }
 
     packet.addInt16(allowedIps.size());
-    for(int i=0; i<allowedIps.size(); i++)
+    for(unsigned int i=0; i<allowedIps.size(); i++)
     {
         packet.addString(allowedIps[i]);
     }
 
     packet.addInt16(directories.size());
-    for(int i=0; i<directories.size(); i++)
+    for(unsigned int i=0; i<directories.size(); i++)
     {
         directories[i].FillPacket(packet);
     }
@@ -156,7 +156,7 @@ void FilezillaGroup::FillPacket(FilezillaAccountPacket &packet)
         packet.addInt8((speedLimitTypes[i] & 0x03) + ((bypassServerSpeedLimit[i] & 0x03) << 2));
         packet.addInt16(speedLimit[i]);
         packet.addInt16(speedLimits[i].size());
-        for(int j=0; j<speedLimits[i].size(); j++)
+        for(unsigned int j=0; j<speedLimits[i].size(); j++)
         {
             speedLimits[i][j].FillPacket(packet);
         }
@@ -424,7 +424,7 @@ void FilezillaDirectory::FillPacket(FilezillaAccountPacket &packet)
 {
     packet.addString(dir);
     packet.addInt16(aliases.size());
-    for(int i=0; i<aliases.size(); i++)
+    for(unsigned int i=0; i<aliases.size(); i++)
     {
         packet.addString(aliases[i]);
     }

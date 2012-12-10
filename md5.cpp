@@ -134,12 +134,12 @@ void MD5::update(FILE *file){
 void MD5::update(istream& stream){
 
   unsigned char buffer[1024];
-  int len;
+  std::streamsize len;
 
   while (stream.good()){
     stream.read((char *)buffer, 1024); // note that return value of read is unusable.
     len=stream.gcount();
-    update(buffer, len);
+    update(buffer, static_cast<unsigned int>(len));
   }
 
 }
@@ -155,12 +155,12 @@ void MD5::update(istream& stream){
 void MD5::update(ifstream& stream){
 
   unsigned char buffer[1024];
-  int len;
+  std::streamsize len;
 
   while (stream.good()){
     stream.read((char *)buffer, 1024); // note that return value of read is unusable.
     len=stream.gcount();
-    update(buffer, len);
+    update(buffer, static_cast<unsigned int>(len));
   }
 
 }

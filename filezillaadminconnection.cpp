@@ -121,7 +121,7 @@ bool FilezillaAdminConnection::parseAuthData()
         return false;
     }
 
-    unsigned int len = *reinterpret_cast<const unsigned int*>(&mDataRead.data()[1]);
+    int len = *reinterpret_cast<const unsigned int*>(&mDataRead.data()[1]);
     if(len + 5 <= mDataRead.length())
     {
         int iCmdId = (mDataRead[0] & 0x7C) >> 2;
@@ -135,7 +135,7 @@ bool FilezillaAdminConnection::parseAuthData()
                 return false;
             }
 
-            unsigned int nonceLen1 = mDataRead[5]*256+mDataRead[6];
+            int nonceLen1 = mDataRead[5]*256+mDataRead[6];
             if((nonceLen1+2) > (len-2))
             {
                 emit connFail("Invalid auth data 2");
@@ -143,7 +143,7 @@ bool FilezillaAdminConnection::parseAuthData()
                 return false;
             }
 
-            unsigned int nonceLen2 = mDataRead[5+2+nonceLen1]*256 + mDataRead[5+2+1+nonceLen1];
+            int nonceLen2 = mDataRead[5+2+nonceLen1]*256 + mDataRead[5+2+1+nonceLen1];
             if((nonceLen1+nonceLen2+4) > len)
             {
                 emit connFail("Invalid auth data 3");
@@ -216,7 +216,7 @@ bool FilezillaAdminConnection::parseNormalData()
     }
     else
     {
-        unsigned int len = *reinterpret_cast<const unsigned int*>(&mDataRead.data()[1]);
+        int len = *reinterpret_cast<const int*>(&mDataRead.data()[1]);
         if(len > 0xFFFFFF)
         {
             emit connFail("Invalid data length");
@@ -273,9 +273,8 @@ void FilezillaAdminConnection::bytesToRead()
 
 void FilezillaAdminConnection::socketError(QAbstractSocket::SocketError error)
 {
-    switch(error)
-    {
-    };
+    // Get rid of warning
+    error;
 }
 
 

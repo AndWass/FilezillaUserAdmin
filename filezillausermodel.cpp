@@ -24,6 +24,7 @@ int FilezillaUserModel::rowCount(const QModelIndex &parent) const
 
 int FilezillaUserModel::columnCount(const QModelIndex &parent) const
 {
+    parent; // Get rid of warning
     return 1;
 }
 
@@ -60,7 +61,7 @@ QModelIndex FilezillaUserModel::parent(const QModelIndex &child) const
 QVariant FilezillaUserModel::data(const QModelIndex &index, int role) const
 {
     if(!index.isValid()) return QVariant();
-    if(index.row() > pUsers->size()) return QVariant();
+    if(static_cast<unsigned int>(index.row()) > pUsers->size()) return QVariant();
     if(role != Qt::DisplayRole) return QVariant();
 
     if(index.internalId() != 0)
@@ -74,6 +75,7 @@ QVariant FilezillaUserModel::data(const QModelIndex &index, int role) const
 
 QVariant FilezillaUserModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
+    section; // Get rid of warning
     if(orientation == Qt::Horizontal && role == Qt::DisplayRole)
     {
         return QVariant("Users");
