@@ -10,6 +10,8 @@
 #include <cstdlib>
 #include <ctime>
 #include <QDir>
+#include <QMessageBox>
+#include <QCommonStyle>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -316,14 +318,22 @@ void MainWindow::on_actionDelete_user_triggered()
 void MainWindow::deleteSelectedUser()
 {
     QModelIndexList selected = ui->tvUsers->selectionModel()->selectedIndexes();
-    for(int i=0; i<selected.size(); i++)
+    if(selected.size() > 0)
     {
-        userModel->removeAt(selected[i].row());
+        QMessageBox mb;
+        mb.setText("Are you sure you want to delete user " + users[selected[0].row()].username + "? This can not be undone.");
+        mb.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+
+        mb.setIcon(QMessageBox::Warning);
+        if(mb.exec() == QMessageBox::Yes)
+        {
+            userModel->removeAt(selected[0].row());
+
+            sendAccountSettings();
+
+            updateAccountSettings();
+        }
     }
-
-    sendAccountSettings();
-
-    updateAccountSettings();
 }
 
 void MainWindow::on_actionEdit_user_directories_triggered()
