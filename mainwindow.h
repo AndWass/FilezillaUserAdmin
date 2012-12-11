@@ -8,6 +8,7 @@
 #include "filezillausermodel.h"
 #include <vector>
 #include <QSharedPointer>
+#include "filezillaaccountcontroller.h"
 
 namespace Ui {
 class MainWindow;
@@ -50,28 +51,26 @@ private slots:
     void action_group_changed(bool checked);
 
 private:
+    void userSelectionChanged(const QModelIndex &index);
     void deleteSelectedUser();
     QSharedPointer<QMenu> usersContextMenu;
     QSharedPointer<QMenu> usersGroupsMenu;
-    std::vector<FilezillaUser> users;
-    std::vector<FilezillaGroup> groups;
-    FilezillaUser getUser(const QString company, const QString password);
 
-    FilezillaUser *getSelectedUser();
+    QString getSelectedUser();
 
     void handleAccountSettingReply(FilezillaReply &reply);
-    void updateAccountSettings();
-    void sendAccountSettings();
 
     void buildGroupsMenu();
     void checkSelectedGroup(const QString &groupName);
 
-    QString getNoneGroupText();
+    QString getNoneGroupMenuText();
 
     Ui::MainWindow *ui;
     FilezillaAdminConnection conn;
 
     FilezillaUserModel *userModel;
+
+    FilezillaAccountController accountController;
 };
 
 #endif // MAINWINDOW_H

@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     filezillaaccounts.cpp \
     filezillausermodel.cpp \
     editdirectoriesdialog.cpp \
-    filezillapacket.cpp
+    filezillapacket.cpp \
+    filezillaaccountcontroller.cpp
 
 HEADERS  += mainwindow.h \
     filezillaserverdesc.h \
@@ -29,7 +30,8 @@ HEADERS  += mainwindow.h \
     filezillaaccounts.h \
     filezillausermodel.h \
     editdirectoriesdialog.h \
-    filezillapacket.h
+    filezillapacket.h \
+    filezillaaccountcontroller.h
 
 FORMS    += mainwindow.ui \
     editdirectoriesdialog.ui
