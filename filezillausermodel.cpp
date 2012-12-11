@@ -1,5 +1,4 @@
 #include "filezillausermodel.h"
-#include <iostream>
 
 FilezillaUserModel::FilezillaUserModel(std::vector<FilezillaUser> *users, QObject *parent) :
     QAbstractItemModel(parent),

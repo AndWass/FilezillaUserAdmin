@@ -1,15 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "filezillaserverdesc.h"
-#include "filezillaaccounts.h"
 #include "editdirectoriesdialog.h"
-#include "md5.h"
-#include <QtNetwork/QTcpSocket>
 #include <string>
-#include <fstream>
 #include <cstdlib>
 #include <ctime>
-#include <QDir>
 #include <QMessageBox>
 #include <QCommonStyle>
 
