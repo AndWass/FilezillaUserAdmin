@@ -171,6 +171,8 @@ void FilezillaAccountController::setUserDirectories(const QString &username, con
     if(p)
     {
         p->directories = directories;
+        saveAccountSettings();
+        updateAccountSettings();
     }
 }
 

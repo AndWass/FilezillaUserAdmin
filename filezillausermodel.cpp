@@ -65,7 +65,12 @@ QVariant FilezillaUserModel::data(const QModelIndex &index, int role) const
     if(index.internalId() != 0)
     {
         int parentIndex = index.internalId() - 1;
-        return (*pUsers)[parentIndex].directories[index.row()].dir;
+        if(index.row() < (*pUsers)[parentIndex].directories.size())
+        {
+            return (*pUsers)[parentIndex].directories[index.row()].dir;
+        }
+
+        return QVariant();
     }
 
     return (*pUsers)[index.row()].username;
