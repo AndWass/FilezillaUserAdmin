@@ -224,7 +224,6 @@ bool FilezillaAdminConnection::parseNormalData()
         }
         else if(len+5 > mDataRead.length())
         {
-            emit connMessage("Wrong data length");
             return false;
         }
         else

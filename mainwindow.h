@@ -55,7 +55,7 @@ private:
 
     FilezillaUser *getSelectedUser();
 
-    void handleAccountReply(FilezillaReply &reply);
+    void handleAccountSettingReply(FilezillaReply &reply);
     void updateAccountSettings();
     void sendAccountSettings();
 

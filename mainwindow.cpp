@@ -68,7 +68,7 @@ void MainWindow::serverReply(FilezillaReply reply)
 {
     if(reply.id == 6)
     {
-        handleAccountReply(reply);
+        handleAccountSettingReply(reply);
     }
     else if(reply.id == 0)
     {
@@ -139,7 +139,7 @@ FilezillaUser *MainWindow::getSelectedUser()
     return &users[selected[0].row()];
 }
 
-void MainWindow::handleAccountReply(FilezillaReply &reply)
+void MainWindow::handleAccountSettingReply(FilezillaReply &reply)
 {
     if(reply.length == 1)
     {
@@ -168,6 +168,7 @@ void MainWindow::handleAccountReply(FilezillaReply &reply)
         {
             FilezillaGroup grp;
             grp.Parse(packet);
+            groups.push_back(grp);
         }
 
         num = packet.getNextInt16();
