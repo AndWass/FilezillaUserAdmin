@@ -162,7 +162,7 @@ void MainWindow::handleAccountReply(FilezillaReply &reply)
     }
     else
     {
-        FilezillaAccountPacket packet(reply.data);
+        FilezillaPacket packet(reply.data);
         unsigned int num = packet.getNextInt16();
         for(unsigned int i=0; i<num; i++)
         {
@@ -190,7 +190,7 @@ void MainWindow::updateAccountSettings()
 
 void MainWindow::sendAccountSettings()
 {
-    FilezillaAccountPacket packet;
+    FilezillaPacket packet;
     packet.addInt16(groups.size());
     for(unsigned int i=0; i<groups.size(); i++)
     {
@@ -218,7 +218,7 @@ void MainWindow::on_btnAddUser_clicked()
         if(users[i].username == user.username)
         {
             found = true;
-            users[i] = user;
+            users[i].password = user.password;
             break;
         }
     }

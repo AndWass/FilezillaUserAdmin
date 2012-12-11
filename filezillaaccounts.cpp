@@ -1,7 +1,7 @@
 #include "filezillaaccounts.h"
 #include <cstdlib>
 
-bool FilezillaSpeedLimit::Parse(FilezillaAccountPacket& packet)
+bool FilezillaSpeedLimit::Parse(FilezillaPacket& packet)
 {
     if(packet.data.length() < 4+4+6+1)
     {
@@ -77,7 +77,7 @@ bool FilezillaSpeedLimit::Parse(FilezillaAccountPacket& packet)
     return true;
 }
 
-void FilezillaSpeedLimit::FillPacket(FilezillaAccountPacket &packet)
+void FilezillaSpeedLimit::FillPacket(FilezillaPacket &packet)
 {
     packet.addInt32(speed);
     if(dateCheck)
@@ -118,15 +118,11 @@ void FilezillaSpeedLimit::FillPacket(FilezillaAccountPacket &packet)
 }
 
 
-void FilezillaGroup::FillPacket(FilezillaAccountPacket &packet)
+void FilezillaGroup::FillPacket(FilezillaPacket &packet)
 {
     packet.addString(name);
-    int temp = ipLimit;
-    temp = ((temp & 0x000000FF) << 24) | ((temp & 0x0000FF00) << 8) | ((temp & 0x00FF0000) >> 8)  | ((temp & 0xFF000000) >> 24);
-    packet.addInt32(temp);
-    temp = userLimit;
-    temp = ((temp & 0x000000FF) << 24) | ((temp & 0x0000FF00) << 8) | ((temp & 0x00FF0000) >> 8)  | ((temp & 0xFF000000) >> 24);
-    packet.addInt32(temp);
+    packet.addReversedInt32(ipLimit);
+    packet.addReversedInt32(userLimit);
 
     int options = bypassUserLimit & 0x03;
     options |= (enabled & 0x03) << 2;
@@ -166,13 +162,11 @@ void FilezillaGroup::FillPacket(FilezillaAccountPacket &packet)
     packet.addInt8(forceSsl);
 }
 
-bool FilezillaGroup::Parse(FilezillaAccountPacket &packet)
+bool FilezillaGroup::Parse(FilezillaPacket &packet)
 {
     name = packet.getNextString();
-    int temp = packet.getNextInt32();
-    ipLimit = (temp >> 24) + ((temp & 0x00FF0000) >> 16) + ((temp & 0x0000FF00) >> 8) + ((temp & 0x000000FF));
-    temp = packet.getNextInt32();
-    userLimit = (temp >> 24) + ((temp & 0x00FF0000) >> 16) + ((temp & 0x0000FF00) >> 8) + ((temp & 0x000000FF));
+    ipLimit = packet.getNextReversedInt32();
+    userLimit = packet.getNextReversedInt32();
 
     int options = packet.getNextInt8();
     bypassUserLimit = options & 0x03;
@@ -270,136 +264,14 @@ FilezillaGroup::~FilezillaGroup()
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-FilezillaAccountPacket::FilezillaAccountPacket()
-{
-}
-
-FilezillaAccountPacket::FilezillaAccountPacket(const QByteArray &d):
-    data(d)
-{
-}
-
-int FilezillaAccountPacket::getNextInt8()
-{
-    int retVal = data[0];
-    data = data.right(data.length()-1);
-    return retVal;
-}
-
-int FilezillaAccountPacket::getNextInt16()
-{
-    int retVal = data[0]*256 + data[1];
-    data = data.right(data.length()-2);
-    return retVal;
-}
-
-unsigned int FilezillaAccountPacket::getNextInt32()
-{
-    unsigned int retVal = getNextInt16();
-    retVal <<= 16;
-    retVal += getNextInt16();
-
-    return retVal;
-}
-
-int FilezillaAccountPacket::getNextInt24()
-{
-    int retVal = getNextInt16();
-    retVal <<= 8;
-    retVal += getNextInt8();
-
-    return retVal;
-}
-
-QString FilezillaAccountPacket::getNextString()
-{
-    QString retVal;
-    int strLen = getNextInt16();
-    if(strLen)
-    {
-        retVal = QString::fromUtf8(data.data(), strLen);
-        data = data.right(data.length()-strLen);
-    }
-    else
-    {
-        retVal = "";
-    }
-
-    return retVal;
-}
-
-void FilezillaAccountPacket::addInt8(int i)
-{
-    data.append(static_cast<char>(i));
-}
-
-void FilezillaAccountPacket::addInt16(int i)
-{
-    data.append(static_cast<char>(i >> 8));
-    data.append(static_cast<char>(i & 0x00FF));
-}
-
-void FilezillaAccountPacket::addInt24(int i)
-{
-    addInt16(i >> 8);
-    addInt8(i);
-}
-
-void FilezillaAccountPacket::addInt32(int i)
-{
-    addInt16(i >> 16);
-    addInt16(i & 0x0000FFFF);
-}
-
-void FilezillaAccountPacket::addString(const QString &str)
-{
-    addInt16(str.length());
-    QByteArray utf8 = str.toUtf8();
-    data.append(utf8);
-}
-
-
-void FilezillaUser::FillPacket(FilezillaAccountPacket &packet)
+void FilezillaUser::FillPacket(FilezillaPacket &packet)
 {
     FilezillaGroup::FillPacket(packet);
     packet.addString(username);
     packet.addString(password);
 }
 
-bool FilezillaUser::Parse(FilezillaAccountPacket &packet)
+bool FilezillaUser::Parse(FilezillaPacket &packet)
 {
     FilezillaGroup::Parse(packet);
     username = packet.getNextString();
@@ -420,7 +292,7 @@ FilezillaDirectory::FilezillaDirectory()
     dirCreate = dirDelete = dirList = dirSubdirs = isHome = false;
     autoCreate = false;
 }
-void FilezillaDirectory::FillPacket(FilezillaAccountPacket &packet)
+void FilezillaDirectory::FillPacket(FilezillaPacket &packet)
 {
     packet.addString(dir);
     packet.addInt16(aliases.size());

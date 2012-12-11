@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     md5.cpp \
     filezillaaccounts.cpp \
     filezillausermodel.cpp \
-    editdirectoriesdialog.cpp
+    editdirectoriesdialog.cpp \
+    filezillapacket.cpp
 
 HEADERS  += mainwindow.h \
     filezillaserverdesc.h \
@@ -27,7 +28,8 @@ HEADERS  += mainwindow.h \
     md5.h \
     filezillaaccounts.h \
     filezillausermodel.h \
-    editdirectoriesdialog.h
+    editdirectoriesdialog.h \
+    filezillapacket.h
 
 FORMS    += mainwindow.ui \
     editdirectoriesdialog.ui

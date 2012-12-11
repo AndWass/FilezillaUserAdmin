@@ -4,34 +4,13 @@
 #include <QByteArray>
 #include <QString>
 #include <vector>
-
-class FilezillaAccountPacket
-{
-public:
-    QByteArray data;
-public:
-    FilezillaAccountPacket();
-    FilezillaAccountPacket(const QByteArray &d);
-
-    int getNextInt8();
-    int getNextInt16();
-    unsigned int getNextInt32();
-    int getNextInt24();
-
-    QString getNextString();
-
-    void addInt8(int i);
-    void addInt16(int i);
-    void addInt24(int i);
-    void addInt32(int i);
-    void addString(const QString &str);
-};
+#include "filezillapacket.h"
 
 class FilezillaSpeedLimit
 {
 public:
-    bool Parse(FilezillaAccountPacket &packet);
-    void FillPacket(FilezillaAccountPacket &packet);
+    bool Parse(FilezillaPacket &packet);
+    void FillPacket(FilezillaPacket &packet);
 
     bool dateCheck;
     bool fromCheck;
@@ -51,7 +30,7 @@ class FilezillaDirectory
 {
 public:
     FilezillaDirectory();
-    void FillPacket(FilezillaAccountPacket &packet);
+    void FillPacket(FilezillaPacket &packet);
     QString dir;
     std::vector<QString> aliases;
     bool fileRead, fileWrite, fileDelete,fileAppend;
@@ -63,8 +42,8 @@ public:
 class FilezillaGroup
 {
 public:
-    virtual void FillPacket(FilezillaAccountPacket &packet);
-    virtual bool Parse(FilezillaAccountPacket &packet);
+    virtual void FillPacket(FilezillaPacket &packet);
+    virtual bool Parse(FilezillaPacket &packet);
     virtual ~FilezillaGroup();
 
     QString name;
@@ -91,8 +70,8 @@ public:
 class FilezillaUser: public FilezillaGroup
 {
 public:
-    virtual void FillPacket(FilezillaAccountPacket &packet);
-    virtual bool Parse(FilezillaAccountPacket &packet);
+    virtual void FillPacket(FilezillaPacket &packet);
+    virtual bool Parse(FilezillaPacket &packet);
     virtual ~FilezillaUser();
 
     QString username;
