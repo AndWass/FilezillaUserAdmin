@@ -15,6 +15,8 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
+    usersContextMenu(new QMenu()),
+    usersGroupsMenu(new QMenu()),
     ui(new Ui::MainWindow)
 {
 
@@ -26,9 +28,12 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&conn, SIGNAL(connFail(QString)), this, SLOT(connectionFailed(QString)));
     connect(&conn, SIGNAL(connMessage(QString)), this, SLOT(connectionMessage(QString)));
     connect(&conn, SIGNAL(replyReceived(FilezillaReply)), this, SLOT(serverReply(FilezillaReply)));
-    usersContextMenu = new QMenu();
     usersContextMenu->addAction(ui->actionEdit_user_directories);
     usersContextMenu->addAction(ui->actionDelete_user);
+    usersContextMenu->addAction(ui->actionGroup_membership);
+    ui->actionGroup_membership->setMenu(usersGroupsMenu.data());
+
+    buildGroupsMenu();
 }
 
 MainWindow::~MainWindow()
@@ -164,6 +169,7 @@ void MainWindow::handleAccountSettingReply(FilezillaReply &reply)
     {
         FilezillaPacket packet(reply.data);
         unsigned int num = packet.getNextInt16();
+        groups.clear();
         for(unsigned int i=0; i<num; i++)
         {
             FilezillaGroup grp;
@@ -205,6 +211,60 @@ void MainWindow::sendAccountSettings()
     }
 
     conn.SendCommand(6, packet.data.data(), packet.data.length());
+}
+
+void MainWindow::buildGroupsMenu()
+{
+    usersGroupsMenu->clear();
+    QAction *nonAction = new QAction(usersGroupsMenu.data());
+    nonAction->setText(getNoneGroupText());
+    nonAction->setCheckable(true);
+    nonAction->setChecked(false);
+    connect(nonAction, SIGNAL(triggered(bool)), this, SLOT(action_group_changed(bool)));
+    usersGroupsMenu->addAction(nonAction);
+    for(int i=0; i<groups.size(); i++)
+    {
+        QAction* ac = new QAction(usersGroupsMenu.data());
+        ac->setText(groups[i].name);
+        ac->setCheckable(true);
+        ac->setChecked(false);
+        connect(ac, SIGNAL(triggered(bool)), this, SLOT(action_group_changed(bool)));
+
+        usersGroupsMenu->addAction(ac);
+    }
+}
+
+void MainWindow::checkSelectedGroup(const QString &groupName)
+{
+    if(groupName == "")
+    {
+        usersGroupsMenu->actions()[0]->setChecked(true);
+    }
+    else
+    {
+        bool found = false;
+        QList<QAction*> actions = usersGroupsMenu->actions();
+        for(unsigned int i=0; i<actions.size(); i++)
+        {
+            if(actions[i]->text() == groupName)
+            {
+                found = true;
+                actions[i]->setChecked(true);
+                break;
+            }
+        }
+
+        if(!found)
+        {
+            // If not found make it check none
+            checkSelectedGroup("");
+        }
+    }
+}
+
+QString MainWindow::getNoneGroupText()
+{
+    return "-- None --";
 }
 
 void MainWindow::on_btnAddUser_clicked()
@@ -304,9 +364,11 @@ void MainWindow::on_tvUsers_customContextMenuRequested(const QPoint &pos)
     {
         if(userModel->flags(index) & Qt::ItemIsSelectable)
         {
-
             QPoint global = ui->tvUsers->mapToGlobal(pos);
             usersContextMenu->popup(global);
+            buildGroupsMenu();
+            checkSelectedGroup(users[index.row()].name);
+
         }
     }
 }
@@ -352,4 +414,42 @@ void MainWindow::on_actionEdit_user_directories_triggered()
         sendAccountSettings();
         updateAccountSettings();
     }
+}
+
+void MainWindow::action_group_changed(bool checked)
+{
+    FilezillaUser *user = getSelectedUser();
+    if(checked)
+    {
+        QString oldGroup = user->name;
+        if(oldGroup == "")
+        {
+            oldGroup = getNoneGroupText();
+        }
+        QList<QAction *> actions = usersGroupsMenu->actions();
+        for(int i=0; i<actions.size(); i++)
+        {
+            if(actions[i]->text() == oldGroup)
+            {
+                continue;
+            }
+
+            if(actions[i]->isChecked())
+            {
+                user->name = actions[i]->text();
+                if(user->name == getNoneGroupText())
+                {
+                    user->name = "";
+                }
+                break;
+            }
+        }
+    }
+    else
+    {
+        user->name = "";
+    }
+
+    sendAccountSettings();
+    updateAccountSettings();
 }
