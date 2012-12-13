@@ -27,7 +27,7 @@ public:
 
     FilezillaServerDesc serverDescription;
 
-    bool SendCommand(int type, char *data, int length);
+    bool SendCommand(int type, char *data, int32_t length);
     bool SendCommand(int type);
 
 private:

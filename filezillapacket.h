@@ -4,6 +4,7 @@
 #include <QByteArray>
 #include <QString>
 #include <cstdint>
+//#include <inttypes.h>
 
 class FilezillaPacket
 {

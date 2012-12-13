@@ -166,7 +166,7 @@ QString MainWindow::getNoneGroupMenuText()
 
 void MainWindow::on_btnAddUser_clicked()
 {
-    accountController.createOrUpdateUser(ui->leUsername->text(), ui->lePassword->text());
+    accountController.createOrUpdateUser(ui->leUsername->text(), ui->lePassword->text(), ui->cbCreateServerDir->isChecked());
 }
 
 void MainWindow::on_btnGeneratePass_clicked()

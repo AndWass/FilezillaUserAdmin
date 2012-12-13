@@ -1,6 +1,7 @@
 #include "filezillaadminconnection.h"
 #include "md5.h"
 #include <memory>
+#include <cstdint>
 
 FilezillaAdminConnection::FilezillaAdminConnection(QObject *parent) :
     QObject(parent)
@@ -26,12 +27,12 @@ void FilezillaAdminConnection::connectToHost(const QString &host, int port, cons
     mSocket->connectToHost(host, port);
 }
 
-bool FilezillaAdminConnection::SendCommand(int type, char *data, int length)
+bool FilezillaAdminConnection::SendCommand(int type, char *data, int32_t length)
 {
     QByteArray arr;
     arr.resize(length+5);
     arr[0] = type << 2;
-    char *p = reinterpret_cast<char*>(&length);
+    int8_t *p = reinterpret_cast<int8_t*>(&length);
     arr[1] = p[0];
     arr[2] = p[1];
     arr[3] = p[2];
@@ -121,7 +122,7 @@ bool FilezillaAdminConnection::parseAuthData()
         return false;
     }
 
-    int len = *reinterpret_cast<const unsigned int*>(&mDataRead.data()[1]);
+    int len = *reinterpret_cast<const uint32_t*>(&mDataRead.data()[1]);
     if(len + 5 <= mDataRead.length())
     {
         int iCmdId = (mDataRead[0] & 0x7C) >> 2;
@@ -216,7 +217,7 @@ bool FilezillaAdminConnection::parseNormalData()
     }
     else
     {
-        int len = *reinterpret_cast<const int*>(&mDataRead.data()[1]);
+        int len = *reinterpret_cast<const int32_t*>(&mDataRead.data()[1]);
         if(len > 0xFFFFFF)
         {
             emit connFail("Invalid data length");

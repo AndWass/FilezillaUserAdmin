@@ -41,7 +41,7 @@ void FilezillaAccountController::updateExistingUser(FilezillaUser *p, const QStr
     p->password = pass;
 }
 
-void FilezillaAccountController::addNewUser(const QString &username, const QString &password)
+void FilezillaAccountController::addNewUser(const QString &username, const QString &password, bool createServerDir)
 {
     QString lower = username.toLower();
     QString startUpper = lower;
@@ -60,8 +60,11 @@ void FilezillaAccountController::addNewUser(const QString &username, const QStri
     dir.dirSubdirs = true;
     dir.dir = "F:\\Organisation\\FTP\\" + startUpper;
 
-    QDir realDir("M:/");
-    realDir.mkpath(startUpper + "/" + "# Customer uploads");
+    if(createServerDir)
+    {
+        QDir realDir("M:/");
+        realDir.mkpath(startUpper + "/" + "# Customer uploads");
+    }
 
     ret.directories.push_back(dir);
 
@@ -134,7 +137,7 @@ QString FilezillaAccountController::userGetGroup(const QString &username)
     return "";
 }
 
-void FilezillaAccountController::createOrUpdateUser(const QString &username, const QString &password)
+void FilezillaAccountController::createOrUpdateUser(const QString &username, const QString &password, bool createServerDir)
 {
     FilezillaUser *p = getUser(username);
     if(p)
@@ -143,7 +146,7 @@ void FilezillaAccountController::createOrUpdateUser(const QString &username, con
     }
     else
     {
-        addNewUser(username, password);
+        addNewUser(username, password, createServerDir);
     }
 
     saveAccountSettings();

@@ -1,4 +1,5 @@
 #include "filezillaserverdesc.h"
+#include <cstdint>
 
 FilezillaServerDesc::FilezillaServerDesc():
     isValid(false), serverVersion(0), protocolVersion(0)
@@ -24,14 +25,14 @@ int FilezillaServerDesc::Parse(const QByteArray &bytes)
         {
             return -1;
         }
-        uiTemp = *reinterpret_cast<const unsigned int*>(&bytes.data()[5]);
+        uiTemp = *reinterpret_cast<const uint32_t*>(&bytes.data()[5]);
         serverVersion = uiTemp;
         uiTemp = bytes[9]*256 + bytes[10];
         if(uiTemp != 4)
         {
             return -1;
         }
-        uiTemp = *reinterpret_cast<const unsigned int*>(&bytes.data()[11]);
+        uiTemp = *reinterpret_cast<const uint32_t*>(&bytes.data()[11]);
         protocolVersion = uiTemp;
         isValid = true;
     }

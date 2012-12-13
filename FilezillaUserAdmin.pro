@@ -36,4 +36,6 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui \
     editdirectoriesdialog.ui
 
+unix:QMAKE_CXXFLAGS += -std=c++0x
+
 win32:DEFINES += _CRT_SECURE_NO_WARNINGS
