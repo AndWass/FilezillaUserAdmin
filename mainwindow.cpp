@@ -166,12 +166,20 @@ QString MainWindow::getNoneGroupMenuText()
 
 void MainWindow::on_btnAddUser_clicked()
 {
-    accountController.createOrUpdateUser(ui->leUsername->text(), ui->lePassword->text(), ui->cbCreateServerDir->isChecked());
+    bool res = accountController.createOrUpdateUser(ui->leUsername->text(), ui->lePassword->text(), ui->cbCreateServerDir->isChecked());
+    if(!res)
+    {
+        QMessageBox mbox;
+        mbox.setText("Failed to add or update user. Make sure username and password are not empty.");
+        mbox.setWindowTitle("Error");
+        mbox.exec();
+    }
 }
 
 void MainWindow::on_btnGeneratePass_clicked()
 {
     // Valid ranges: 48 - 57, 65-90, 97-122
+    // corresponding to 0-9, A-Z, a-z in ASCII.
 
     QString passwd = "";
     char temp;

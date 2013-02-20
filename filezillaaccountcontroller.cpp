@@ -41,8 +41,12 @@ void FilezillaAccountController::updateExistingUser(FilezillaUser *p, const QStr
     p->password = pass;
 }
 
-void FilezillaAccountController::addNewUser(const QString &username, const QString &password, bool createServerDir)
+bool FilezillaAccountController::addNewUser(const QString &username, const QString &password, bool createServerDir)
 {
+    if(username.size() == 0 || password.size() == 0)
+    {
+        return false;
+    }
     QString lower = username.toLower();
     QString startUpper = lower;
     startUpper[0] = lower[0].toUpper();
@@ -90,6 +94,8 @@ void FilezillaAccountController::addNewUser(const QString &username, const QStri
     ret.password = pass;
 
     userModel->pushBack(ret);
+
+    return true;
 }
 
 QString FilezillaAccountController::getMD5Password(const QString &plaintext)
@@ -137,8 +143,14 @@ QString FilezillaAccountController::userGetGroup(const QString &username)
     return "";
 }
 
-void FilezillaAccountController::createOrUpdateUser(const QString &username, const QString &password, bool createServerDir)
+bool FilezillaAccountController::createOrUpdateUser(const QString &username, const QString &password, bool createServerDir)
 {
+    if(username.length() == 0 || password.length() == 0)
+    {
+        return false;
+    }
+    bool bRetVal = true;
+
     FilezillaUser *p = getUser(username);
     if(p)
     {
@@ -146,11 +158,13 @@ void FilezillaAccountController::createOrUpdateUser(const QString &username, con
     }
     else
     {
-        addNewUser(username, password, createServerDir);
+        bRetVal = addNewUser(username, password, createServerDir);
     }
 
     saveAccountSettings();
     updateAccountSettings();
+
+    return bRetVal;
 }
 
 void FilezillaAccountController::removeUser(const QString &username)
