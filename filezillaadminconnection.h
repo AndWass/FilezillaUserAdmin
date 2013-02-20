@@ -5,6 +5,9 @@
 #include <QtNetwork/QTcpSocket>
 #include <QByteArray>
 #include "filezillaserverdesc.h"
+#ifdef WIN32
+#include <cstdint>
+#endif
 
 struct FilezillaReply
 {

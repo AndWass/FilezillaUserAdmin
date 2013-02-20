@@ -18,8 +18,18 @@ uint8_t FilezillaPacket::getNextInt8()
 
 uint16_t FilezillaPacket::getNextInt16()
 {
-    uint16_t retVal = data[0]*256 + data[1];
-    data = data.right(data.length()-2);
+    uint16_t retVal = getNextInt8();
+    retVal <<= 8;
+    retVal += getNextInt8();
+    return retVal;
+}
+
+uint32_t FilezillaPacket::getNextInt24()
+{
+    uint32_t retVal = getNextInt16();
+    retVal <<= 8;
+    retVal += getNextInt8();
+
     return retVal;
 }
 
@@ -36,15 +46,6 @@ uint32_t FilezillaPacket::getNextReversedInt32()
 {
     uint32_t retVal, temp = getNextInt32();
     retVal = ((temp >> 24) & 0x000000FF) | ((temp >> 8) & 0x0000FF00) | ((temp << 8) & 0x00FF0000) | ((temp << 24) & 0xFF000000);
-    return retVal;
-}
-
-uint32_t FilezillaPacket::getNextInt24()
-{
-    uint32_t retVal = getNextInt16();
-    retVal <<= 8;
-    retVal += getNextInt8();
-
     return retVal;
 }
 
