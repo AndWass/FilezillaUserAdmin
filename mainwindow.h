@@ -30,6 +30,7 @@ private slots:
     void connectionAuthenticated();
     void connectionFailed(const QString &reason);
     void connectionMessage(const QString &message);
+    void connectionClosed();
     void serverReply(FilezillaReply reply);
 
     void on_btnAddUser_clicked();

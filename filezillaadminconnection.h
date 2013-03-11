@@ -51,6 +51,7 @@ signals:
     void connFail(const QString& message);
     void connMessage(const QString &message);
     void replyReceived(FilezillaReply reply);
+    void connectionClosed();
 
 private slots:
     void bytesToRead();

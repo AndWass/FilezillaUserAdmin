@@ -22,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&conn, SIGNAL(connFail(QString)), this, SLOT(connectionFailed(QString)));
     connect(&conn, SIGNAL(connMessage(QString)), this, SLOT(connectionMessage(QString)));
     connect(&conn, SIGNAL(replyReceived(FilezillaReply)), this, SLOT(serverReply(FilezillaReply)));
+    connect(&conn, SIGNAL(connectionClosed()), this, SLOT(connectionClosed()));
     usersContextMenu->addAction(ui->actionEdit_user_directories);
     usersContextMenu->addAction(ui->actionDelete_user);
     usersContextMenu->addAction(ui->actionGroup_membership);
@@ -63,6 +64,13 @@ void MainWindow::connectionMessage(const QString &message)
 {
     ui->textArea->appendPlainText(message);
     ui->textArea->update();
+}
+
+void MainWindow::connectionClosed()
+{
+    ui->textArea->appendPlainText("Connection closed");
+    ui->textArea->update();
+    userModel->clear();
 }
 
 void MainWindow::serverReply(FilezillaReply reply)

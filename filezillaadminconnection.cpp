@@ -292,6 +292,10 @@ void FilezillaAdminConnection::socketError(QAbstractSocket::SocketError error)
         emit connFail("Connection timeout");
         break;
 
+    case QAbstractSocket::RemoteHostClosedError:
+        emit connectionClosed();
+        break;
+
     default:
         break;
     }
