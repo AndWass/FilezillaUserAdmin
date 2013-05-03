@@ -41,7 +41,8 @@ void FilezillaAccountController::updateExistingUser(FilezillaUser *p, const QStr
     p->password = pass;
 }
 
-bool FilezillaAccountController::addNewUser(const QString &username, const QString &password, bool createServerDir)
+bool FilezillaAccountController::addNewUser(const QString &username, const QString &password,
+                                            bool createServerDir, const QString &basePath)
 {
     if(username.size() == 0 || password.size() == 0)
     {
@@ -66,7 +67,7 @@ bool FilezillaAccountController::addNewUser(const QString &username, const QStri
 
     if(createServerDir)
     {
-        QDir realDir("M:/");
+        QDir realDir(basePath);
         realDir.mkpath(startUpper + "/" + "# Customer uploads");
     }
 
@@ -143,8 +144,15 @@ QString FilezillaAccountController::userGetGroup(const QString &username)
     return "";
 }
 
-bool FilezillaAccountController::createOrUpdateUser(const QString &username, const QString &password, bool createServerDir)
+bool FilezillaAccountController::createOrUpdateUser(const QString &username, const QString &password,
+                                                    bool createServerDir, const QString &baseDir)
 {
+    // Safeguard against bad values.
+    if(baseDir.length() == 0)
+    {
+        createServerDir = false;
+    }
+
     if(username.length() == 0 || password.length() == 0)
     {
         return false;
@@ -158,7 +166,7 @@ bool FilezillaAccountController::createOrUpdateUser(const QString &username, con
     }
     else
     {
-        bRetVal = addNewUser(username, password, createServerDir);
+        bRetVal = addNewUser(username, password, createServerDir, baseDir);
     }
 
     saveAccountSettings();

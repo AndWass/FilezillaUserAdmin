@@ -64,6 +64,8 @@ private:
     void buildGroupsMenu();
     void checkSelectedGroup(const QString &groupName);
 
+    void loadSettings();
+
     QString getNoneGroupMenuText();
 
     Ui::MainWindow *ui;

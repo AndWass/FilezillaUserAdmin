@@ -24,7 +24,7 @@ class FilezillaAccountController: public QObject
     void handleAccountSettingsReply(FilezillaReply reply);
 
     void updateExistingUser(FilezillaUser *p, const QString &password);
-    bool addNewUser(const QString &username, const QString &password, bool createServerDir);
+    bool addNewUser(const QString &username, const QString &password, bool createServerDir, const QString &basePath);
 
     QString getMD5Password(const QString &plaintext);
 public:
@@ -34,7 +34,7 @@ public:
 
     void userSetGroup(const QString &username, const QString &groupName);
     QString userGetGroup(const QString &username);
-    bool createOrUpdateUser(const QString &username, const QString &password, bool createServerDir);
+    bool createOrUpdateUser(const QString &username, const QString &password, bool createServerDir, const QString &baseDir);
     void removeUser(const QString &username);
 
     void setUserDirectories(const QString &username, const std::vector<FilezillaDirectory> directories);

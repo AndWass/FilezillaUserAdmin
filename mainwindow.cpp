@@ -6,6 +6,7 @@
 #include <ctime>
 #include <QMessageBox>
 #include <QCommonStyle>
+#include <QSettings>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -31,6 +32,8 @@ MainWindow::MainWindow(QWidget *parent) :
     userModel = accountController.getUserModel();
 
     buildGroupsMenu();
+
+    loadSettings();
 }
 
 MainWindow::~MainWindow()
@@ -167,6 +170,24 @@ void MainWindow::checkSelectedGroup(const QString &groupName)
     }
 }
 
+void MainWindow::loadSettings()
+{
+    QSettings settings("AndreasWass", "FilezillaUserAdmin");
+#ifdef WIN32
+    if(!settings.contains("ftp_path"))
+    {
+        settings.setValue("ftp_path", "M:\\");
+    }
+#else
+    if(!settings.contains("ftp_path"))
+    {
+        settings.setValue("ftp_path", "");
+    }
+#endif
+
+    ui->leDirLocation->setText(settings.value("ftp_path").toString());
+}
+
 QString MainWindow::getNoneGroupMenuText()
 {
     return "-- None --";
@@ -174,7 +195,10 @@ QString MainWindow::getNoneGroupMenuText()
 
 void MainWindow::on_btnAddUser_clicked()
 {
-    bool res = accountController.createOrUpdateUser(ui->leUsername->text(), ui->lePassword->text(), ui->cbCreateServerDir->isChecked());
+    bool res = accountController.createOrUpdateUser(ui->leUsername->text(),
+                                                    ui->lePassword->text(),
+                                                    ui->cbCreateServerDir->isChecked(),
+                                                    ui->leDirLocation->text());
     if(!res)
     {
         QMessageBox mbox;

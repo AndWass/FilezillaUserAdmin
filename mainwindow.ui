@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>942</width>
+    <width>660</width>
     <height>796</height>
    </rect>
   </property>
@@ -185,7 +185,7 @@
                   </property>
                  </widget>
                 </item>
-                <item row="4" column="1">
+                <item row="6" column="1">
                  <layout class="QHBoxLayout" name="horizontalLayout_4">
                   <item>
                    <widget class="QPushButton" name="btnAddUser">
@@ -239,10 +239,33 @@
                   </item>
                  </layout>
                 </item>
-                <item row="3" column="1">
+                <item row="4" column="1">
                  <widget class="QCheckBox" name="cbCreateServerDir">
                   <property name="text">
                    <string>Create directories on server</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="5" column="1">
+                 <widget class="QLineEdit" name="leDirLocation">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                 </widget>
+                </item>
+                <item row="5" column="0">
+                 <widget class="QLabel" name="label_6">
+                  <property name="text">
+                   <string>Base path</string>
                   </property>
                  </widget>
                 </item>
@@ -365,8 +388,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>942</width>
-     <height>25</height>
+     <width>660</width>
+     <height>21</height>
     </rect>
    </property>
   </widget>
@@ -405,5 +428,22 @@
   <tabstop>btnDelete</tabstop>
  </tabstops>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>cbCreateServerDir</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>leDirLocation</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>412</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>492</x>
+     <y>284</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
