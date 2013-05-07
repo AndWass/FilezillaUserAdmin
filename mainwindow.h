@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QMenu>
+#include <QSettings>
 #include "filezillaadminconnection.h"
 #include "filezillaaccounts.h"
 #include "filezillausermodel.h"
@@ -21,6 +22,8 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+
     
 private slots:
     void on_btnConnect_clicked();
@@ -51,7 +54,11 @@ private slots:
 
     void action_group_changed(bool checked);
 
+protected:
+    virtual void closeEvent(QCloseEvent *event);
+
 private:
+    QSettings *getSettings();
     void userSelectionChanged(const QModelIndex &index);
     void deleteSelectedUser();
     QSharedPointer<QMenu> usersContextMenu;

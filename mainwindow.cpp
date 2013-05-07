@@ -24,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&conn, SIGNAL(connMessage(QString)), this, SLOT(connectionMessage(QString)));
     connect(&conn, SIGNAL(replyReceived(FilezillaReply)), this, SLOT(serverReply(FilezillaReply)));
     connect(&conn, SIGNAL(connectionClosed()), this, SLOT(connectionClosed()));
+
     usersContextMenu->addAction(ui->actionEdit_user_directories);
     usersContextMenu->addAction(ui->actionDelete_user);
     usersContextMenu->addAction(ui->actionGroup_membership);
@@ -172,20 +173,17 @@ void MainWindow::checkSelectedGroup(const QString &groupName)
 
 void MainWindow::loadSettings()
 {
-    QSettings settings("AndreasWass", "FilezillaUserAdmin");
+    QSettings* settings = getSettings();
+    if(!settings->contains("ftp_path"))
+    {
 #ifdef WIN32
-    if(!settings.contains("ftp_path"))
-    {
-        settings.setValue("ftp_path", "M:\\");
-    }
+        settings->setValue("ftp_path", "M:\\");
 #else
-    if(!settings.contains("ftp_path"))
-    {
-        settings.setValue("ftp_path", "");
-    }
+        settings->setValue("ftp_path", "");
 #endif
+    }
 
-    ui->leDirLocation->setText(settings.value("ftp_path").toString());
+    ui->leDirLocation->setText(settings->value("ftp_path").toString());
 }
 
 QString MainWindow::getNoneGroupMenuText()
@@ -347,4 +345,19 @@ void MainWindow::userSelectionChanged(const QModelIndex &index)
             ui->btnDelete->setEnabled(true);
         }
     }
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    QSettings* settings = getSettings();
+    settings->setValue("ftp_path", ui->leDirLocation->text());
+    settings->sync();
+
+    QMainWindow::closeEvent(event);
+}
+
+QSettings* MainWindow::getSettings()
+{
+    static QSettings settings("AndreasWass", "FilezillaUserAdmin");
+    return &settings;
 }
